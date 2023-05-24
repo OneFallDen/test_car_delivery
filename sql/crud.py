@@ -35,3 +35,22 @@ def upd_car(carId: int, loc:  str, db: Session):
 """
     CARGO
 """
+
+
+def add_crg(cargo: schemas.NewCargo, db: Session):
+    db_cargo = models.Cargo(
+        pick_up=cargo.pick_up,
+        delivery=cargo.delivery,
+        weight=cargo.weight,
+        description=cargo.description
+    )
+    db.add(db_cargo)
+    db.commit()
+    db.refresh(db_cargo)
+    return {
+        'id': db_cargo.id,
+        'pick_up': db_cargo.pick_up,
+        'delivery': db_cargo.delivery,
+        'weight': db_cargo.weight,
+        'description': db_cargo.description
+    }
