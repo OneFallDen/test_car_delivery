@@ -37,6 +37,11 @@ def upd_car(carId: int, loc:  str, db: Session):
 """
 
 
+def get_cargo_by_id(cargoId: int, db: Session):
+    result = db.execute(select(models.Cargo).where(models.Cargo.id == cargoId)).first()
+    return result[0]
+
+
 def add_crg(cargo: schemas.NewCargo, db: Session):
     db_cargo = models.Cargo(
         pick_up=cargo.pick_up,
@@ -53,4 +58,22 @@ def add_crg(cargo: schemas.NewCargo, db: Session):
         'delivery': db_cargo.delivery,
         'weight': db_cargo.weight,
         'description': db_cargo.description
+    }
+
+
+def upd_cargo(cargoId: int, cargo: schemas.UpdateCargo, db: Session):
+    db.query(models.Cargo).filter(models.Cargo.id == cargoId).update(
+        {
+            models.Cargo.weight: cargo.weight,
+            models.Cargo.description: cargo.description
+        }
+    )
+    res = get_cargo_by_id(cargoId, db)
+    db.commit()
+    return {
+        'id': cargoId,
+        'pick_up': res.pick_up,
+        'delivery': res.delivery,
+        'weight': cargo.weight,
+        'description': cargo.description
     }
