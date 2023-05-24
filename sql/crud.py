@@ -77,3 +77,8 @@ def upd_cargo(cargoId: int, cargo: schemas.UpdateCargo, db: Session):
         'weight': cargo.weight,
         'description': cargo.description
     }
+
+
+def dlt_cargo(cargoId: int, db: Session):
+    db.query(models.Cargo).filter(models.Cargo.id == cargoId).delete()
+    db.commit()

@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from sql.crud import add_crg, get_cargo_by_id, upd_cargo
+from sql.crud import add_crg, get_cargo_by_id, upd_cargo, dlt_cargo
 from models import schemas
 from controllers.validation_controller import valid_zip, valid_weight, valid_description
 
@@ -22,3 +22,11 @@ def cargo_update(cargoId: int, cargo: schemas.UpdateCargo, db: Session):
     except:
         raise HTTPException(status_code=404, detail=f'Cargo with id={cargoId} not found')
     return upd_cargo(cargoId, cargo, db)
+
+
+def cargo_delete(cargoId: int, db: Session):
+    try:
+        get_cargo_by_id(cargoId, db)
+    except:
+        raise HTTPException(status_code=404, detail=f'Cargo with id={cargoId} not found')
+    return dlt_cargo(cargoId, db)
