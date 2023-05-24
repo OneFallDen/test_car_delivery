@@ -1,17 +1,19 @@
 from pydantic import BaseModel
 
+from typing import Union
+
 
 class NewCargo(BaseModel):
-    pick_up: str | None
-    delivery: str | None
-    weight: int | None
-    description: str | None
+    pick_up: Union[str, None]
+    delivery: Union[str, None]
+    weight: Union[int, None]
+    description: Union[str, None]
 
 
 class UpdateCarLoc(BaseModel):
-    loc: str | None
+    loc: Union[str, None]
 
 
 class UpdateCargo(BaseModel):
-    weight: int | None
-    description: str | None
+    weight: Union[int, None]
+    description: Union[str, None]
