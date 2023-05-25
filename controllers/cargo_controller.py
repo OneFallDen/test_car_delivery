@@ -69,7 +69,10 @@ def cargos_get(db: Session):
 
 
 def cargo_get_by_id(cargoId: int, db: Session):
-    cargo = get_cargo_by_id(cargoId, db)
+    try:
+        cargo = get_cargo_by_id(cargoId, db)
+    except:
+        raise HTTPException(status_code=404, detail='Cargo not found')
     cargo_loc = get_location(cargo.pick_up, db)
     cars = get_all_cars(db)
     cars_to_send = []
