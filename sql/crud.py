@@ -11,6 +11,11 @@ from models import schemas
 """
 
 
+def get_all_cars(db: Session):
+    result = db.execute(select(models.Car)).scalars().all()
+    return result
+
+
 def get_car_by_id(carId: int, db: Session):
     result = db.execute(select(models.Car).where(models.Car.id == carId)).first()
     return result[0]
@@ -35,6 +40,11 @@ def upd_car(carId: int, loc:  str, db: Session):
 """
     CARGO
 """
+
+
+def get_all_cargos(db: Session):
+    result = db.execute(select(models.Cargo)).scalars().all()
+    return result
 
 
 def get_cargo_by_id(cargoId: int, db: Session):
@@ -82,3 +92,13 @@ def upd_cargo(cargoId: int, cargo: schemas.UpdateCargo, db: Session):
 def dlt_cargo(cargoId: int, db: Session):
     db.query(models.Cargo).filter(models.Cargo.id == cargoId).delete()
     db.commit()
+
+
+"""
+    LOCATION
+"""
+
+
+def get_location(uszip: str, db: Session):
+    result = db.execute(select(models.Location).where(models.Location.zip == str(int(uszip)))).first()
+    return result[0]

@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from sql.db import get_db
 from models import schemas
-from controllers.cargo_controller import cargo_add, cargo_update, cargo_delete
+from controllers.cargo_controller import cargo_add, cargo_update, cargo_delete, cargos_get
 
 
 router = routing.APIRouter()
@@ -21,7 +21,7 @@ async def get_cargo_by_id(cargoId: int, db: Session = Depends(get_db)):
 
 @router.get('/cargo', tags=['cargo'])
 async def get_cargos(db: Session = Depends(get_db)):
-    return 0
+    return cargos_get(db)
 
 
 @router.put('/cargo/{cargoId}', tags=['cargo'])
