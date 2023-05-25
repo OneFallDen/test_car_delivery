@@ -2,9 +2,10 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from geopy import distance
 
-from sql.crud import add_crg, get_cargo_by_id, upd_cargo, dlt_cargo, get_all_cargos, get_all_cars, get_location
+from sql.crud import add_crg, get_cargo_by_id, upd_cargo, dlt_cargo, get_all_cargos, get_all_cars, get_location, \
+    get_cargos_by_weight
 from models import schemas
-from controllers.validation_controller import valid_zip, valid_weight, valid_description
+from controllers.validation_controller import valid_zip, valid_weight, valid_description, valid_miles
 
 
 def cargo_add(cargo: schemas.NewCargo, db: Session):
@@ -33,8 +34,7 @@ def cargo_delete(cargoId: int, db: Session):
     return dlt_cargo(cargoId, db)
 
 
-def cargos_get(db: Session):
-    cargos = get_all_cargos(db)
+def get_cargo_list(miles: int, cargos, db: Session):
     cargos_to_send = []
     cars = get_all_cars(db)
     to_skip = []
@@ -49,7 +49,7 @@ def cargos_get(db: Session):
             else:
                 car_loc = get_location(car.loc, db)
                 dists = distance.distance((cargo_loc.lat, cargo_loc.lng), (car_loc.lat, car_loc.lng)).miles
-                if dists > 450:
+                if dists > miles:
                     to_skip.append(car.loc)
                 else:
                     count += 1
@@ -66,6 +66,22 @@ def cargos_get(db: Session):
         to_skip.clear()
         count = 0
     return cargos_to_send
+
+
+def cargos_get(db: Session):
+    cargos = get_all_cargos(db)
+    if not cargos:
+        raise HTTPException(status_code=404, detail='Cargos not found')
+    return get_cargo_list(450, cargos, db)
+
+
+def cargo_filtered(weight: int, miles: int, db: Session):
+    valid_miles(miles)
+    valid_weight(weight)
+    cargos = get_cargos_by_weight(weight, db)
+    if not cargos:
+        raise HTTPException(status_code=404, detail=f'Cargos with weight={weight} not found')
+    return get_cargo_list(miles, cargos, db)
 
 
 def cargo_get_by_id(cargoId: int, db: Session):

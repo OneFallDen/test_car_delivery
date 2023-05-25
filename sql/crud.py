@@ -41,6 +41,11 @@ def upd_car(carId: int, loc:  str, db: Session):
 """
 
 
+def get_cargos_by_weight(weight: int, db: Session):
+    result = db.execute(select(models.Cargo).where(models.Cargo.weight == weight)).scalars().all()
+    return result
+
+
 def get_all_cargos(db: Session):
     result = db.execute(select(models.Cargo)).scalars().all()
     return result
