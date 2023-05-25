@@ -19,7 +19,7 @@ services:
   webapi:
     container_name: webapi
     build: .
-    command: bash -c "python sql/models.py createdb && uvicorn main:app --reload --host 0.0.0.0 --port 8080"
+    command: bash -c "python sql/models.py createdb && uvicorn main:app --reload --host 0.0.0.0 --port 8000"
     ports:
       - "8000:8000"
     depends_on:
