@@ -4,6 +4,8 @@ from fastapi import HTTPException
 def valid_zip(uszip: str):
     if not uszip:
         raise HTTPException(status_code=400, detail='Zip is null')
+    if uszip.strip() == '':
+        raise HTTPException(status_code=400, detail='Zip is null')
     if len(uszip) > 5:
         raise HTTPException(status_code=400, detail='Incorrect zip')
 
@@ -19,6 +21,8 @@ def valid_weight(weight: int):
 
 def valid_description(description: str):
     if not description:
+        raise HTTPException(status_code=400, detail='Description is null')
+    if description.strip() == '':
         raise HTTPException(status_code=400, detail='Description is null')
     if len(description) > 255:
         raise HTTPException(status_code=400, detail='Description is too long')

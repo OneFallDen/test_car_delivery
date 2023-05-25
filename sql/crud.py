@@ -1,5 +1,4 @@
-from fastapi import HTTPException
-from sqlalchemy import select, and_
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from sql import models
