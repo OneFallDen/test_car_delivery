@@ -10,6 +10,13 @@ def valid_zip(uszip: str):
         raise HTTPException(status_code=400, detail='Incorrect zip')
 
 
+def valid_miles(miles: int):
+    if not miles:
+        raise HTTPException(status_code=400, detail='Miles is null')
+    if miles < 0:
+        raise HTTPException(status_code=400, detail='Incorrect miles')
+
+
 def valid_weight(weight: int):
     if not weight:
         raise HTTPException(status_code=400, detail='Weight is null')
