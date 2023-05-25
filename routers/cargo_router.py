@@ -3,7 +3,8 @@ from sqlalchemy.orm import Session
 
 from sql.db import get_db
 from models import schemas
-from controllers.cargo_controller import cargo_add, cargo_update, cargo_delete, cargos_get, cargo_get_by_id
+from controllers.cargo_controller import cargo_add, cargo_update, cargo_delete, cargos_get, cargo_get_by_id, \
+    cargo_filtered
 
 
 router = routing.APIRouter()
@@ -17,6 +18,11 @@ async def add_cargo(cargo: schemas.NewCargo, db: Session = Depends(get_db)):
 @router.get('/cargo/{cargoId}', tags=['cargo'])
 async def get_cargo_by_id(cargoId: int, db: Session = Depends(get_db)):
     return cargo_get_by_id(cargoId, db)
+
+
+@router.get('/cargo/filter/{weight}/{miles}', tags=['cargo'])
+async def get_cargo_filtered(weight: int, miles: int, db: Session = Depends(get_db)):
+    return cargo_filtered(weight, miles, db)
 
 
 @router.get('/cargo', tags=['cargo'])
