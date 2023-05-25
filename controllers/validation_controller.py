@@ -4,7 +4,7 @@ from fastapi import HTTPException
 def valid_zip(uszip: str):
     if not uszip:
         raise HTTPException(status_code=400, detail='Zip is null')
-    if len(uszip) != 5:
+    if len(uszip) > 5:
         raise HTTPException(status_code=400, detail='Incorrect zip')
 
 
