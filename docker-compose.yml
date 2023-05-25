@@ -26,9 +26,4 @@ services:
       - database
     restart: always
     environment:
-      - DATABASE=postgresql
-      - DB_USER=postgres
-      - DB_PASSWORD=123
-      - DB_NAME=us_delivery
-      - DB_HOST=localhost
       - POSTGRESQL_CONFIG=postgresql+psycopg2://postgres:123@database/us_delivery
