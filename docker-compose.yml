@@ -1,0 +1,34 @@
+version: '3.9'
+
+services:
+# Сервис для разворачивания контейнера с базой данных
+  database:
+    image: postgres:latest
+    restart: always
+    volumes:
+      - /var/lib/postgresql/data/
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=us_delivery
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123
+
+
+# Сервис для разворачивания контейнера с приложением
+  webapi:
+    container_name: webapi
+    build: .
+    command: bash -c "python sql/models.py createdb && uvicorn main:app --reload --host 0.0.0.0 --port 8080"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+    restart: always
+    environment:
+      - DATABASE=postgresql
+      - DB_USER=postgres
+      - DB_PASSWORD=123
+      - DB_NAME=us_delivery
+      - DB_HOST=localhost
+      - POSTGRESQL_CONFIG=postgresql+psycopg2://postgres:123@database/us_delivery
