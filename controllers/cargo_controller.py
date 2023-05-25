@@ -66,3 +66,26 @@ def cargos_get(db: Session):
         to_skip.clear()
         count = 0
     return cargos_to_send
+
+
+def cargo_get_by_id(cargoId: int, db: Session):
+    cargo = get_cargo_by_id(cargoId, db)
+    cargo_loc = get_location(cargo.pick_up, db)
+    cars = get_all_cars(db)
+    cars_to_send = []
+    for car in cars:
+        car_loc = get_location(car.loc, db)
+        dists = distance.distance((cargo_loc.lat, cargo_loc.lng), (car_loc.lat, car_loc.lng)).miles
+        cars_to_send.append(
+            {
+                car.numb: dists
+            }
+        )
+    return {
+        'id': cargoId,
+        'pick_up': cargo.pick_up,
+        'delivery': cargo.delivery,
+        'weight': cargo.weight,
+        'description': cargo.description,
+        'cars': cars_to_send
+    }
